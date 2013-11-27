@@ -14,10 +14,4 @@ public interface UserService {
     void delete(User user);
 
     User getByUsername(String username);
-
-    ServiceResult<User> update(User user);
-
-    boolean userVerify(User user, String password);
-
-    boolean password(User user, String newpass);
 }

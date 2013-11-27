@@ -18,10 +18,6 @@ public class PostValidator {
             errors.put("title", "Please enter post title");
         }
 
-        if (StringUtils.isBlank(post.getContent())){
-            errors.put("content","Please enter post content");
-        }
-
         return errors;
     }
 }

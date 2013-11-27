@@ -27,18 +27,8 @@ import java.util.Date;
 @RequestMapping("/posts")
 public class PostController {
 
-    private PostService postService;
-    private UserService userService;
-
-    public PostController(){
-        postService = new PostServiceImpl(MyBatisUtil.getSqlSessionFactory());
-        userService = new UserServiceImpl(MyBatisUtil.getSqlSessionFactory());
-    }
-
-    public PostController(PostService postService,UserService userService){
-        this.postService = postService;
-        this.userService = userService;
-    }
+    private PostService postService = new PostServiceImpl(MyBatisUtil.getSqlSessionFactory());
+    private UserService userService = new UserServiceImpl(MyBatisUtil.getSqlSessionFactory());
 
     @RequestMapping(value = {"/{postId}"}, method = RequestMethod.GET)
     public String get(@PathVariable("postId") Long postId, Model model, @ModelAttribute Post post, Principal principal) {
@@ -53,22 +43,16 @@ public class PostController {
     }
 
     @RequestMapping(value = {"/create"}, method = RequestMethod.POST)
-    public ModelAndView processCreate(HttpServletRequest request, Principal principal,Model model) throws IOException {
+    public ModelAndView processCreate(HttpServletRequest request, Principal principal) throws IOException {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String parentId = request.getParameter("parentId");
 
         Long parentIdLong = 0L;
-
         if (!StringUtils.isEmpty(parentId)) {
             parentIdLong = Long.parseLong(parentId);
         }
         User currentUser = userService.getByUsername(principal.getName());
-
-        if(isTitleOrContentEmpty(title,content)){
-           model.addAttribute("error","true");
-           return new ModelAndView("posts/create");
-        }
 
         PostBuilder builder = new PostBuilder();
         builder.title(title).content(content).author(currentUser.getUserName()).parentId(parentIdLong).creatorId(currentUser.getId())
@@ -76,15 +60,6 @@ public class PostController {
 
         postService.save(builder.build());
 
-        model.addAttribute("posts", postService.findAllPostsOrderByTime());
-        return new ModelAndView("home");
-        //return new ModelAndView("posts/createSuccess");
-    }
-
-    public boolean isTitleOrContentEmpty(String title, String content){
-        if(title.isEmpty() || content.isEmpty())
-            return true;
-        else
-            return false;
+        return new ModelAndView("posts/createSuccess");
     }
 }

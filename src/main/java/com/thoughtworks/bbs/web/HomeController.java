@@ -15,14 +15,7 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    PostService postService;
-
-    public HomeController(){
-        postService = new PostServiceImpl(MyBatisUtil.getSqlSessionFactory());
-    }
-    public HomeController(PostService service) {
-        postService = service;
-    }
+    PostService postService = new PostServiceImpl(MyBatisUtil.getSqlSessionFactory());
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(Model model, @ModelAttribute("post") Post post, Principal principal) {
@@ -30,7 +23,7 @@ public class HomeController {
             return "login";
         }
 
-        model.addAttribute("posts", postService.findAllPostsOrderByTime());
+        model.addAttribute("posts", postService.findMainPostByAuthorName(principal.getName()));
         return "home";
     }
 }

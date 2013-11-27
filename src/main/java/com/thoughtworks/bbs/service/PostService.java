@@ -15,8 +15,4 @@ public interface PostService {
     void delete(Post post);
 
     List<Post> findAllPostByMainPost(Long postId);
-
-    List<Post> findAllPostsOrderByTime();
-
-    List<Post> findMainPostByAuthorNameSortedByCreateTime(String authorName);
 }

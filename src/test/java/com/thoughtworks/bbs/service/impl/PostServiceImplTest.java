@@ -34,7 +34,7 @@ public class PostServiceImplTest {
         postService = new PostServiceImpl(sessionFactory);
 
         postBuilder = new PostBuilder();
-        postBuilder.author("juntao").title("Introduce to TDD").content("ssss");
+        postBuilder.author("juntao").title("Introduce to TDD");
     }
 
     @Test
@@ -77,19 +77,4 @@ public class PostServiceImplTest {
         verify(mapper).findAllPostByMainPost(id);
         assertThat(returnedPostList, is(expectedPostList));
     }
-
-    @Test
-    public void shouldGetAllPostsOrderByTime() {
-        List<Post> expectedPostList = new ArrayList();
-        expectedPostList.add(new Post());
-        expectedPostList.add(new Post());
-        expectedPostList.add(new Post());
-        when(mapper.findAllPostsOrderByTime()).thenReturn(expectedPostList);
-
-        List<Post> returnedPostList = postService.findAllPostsOrderByTime();
-
-        verify(mapper).findAllPostsOrderByTime();
-        assertThat(returnedPostList, is(expectedPostList));
-    }
-
 }
